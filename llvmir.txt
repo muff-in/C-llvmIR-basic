@@ -1,0 +1,9 @@
+clang xyz.c -S (for asm)
+
+clang xyz.c -S -emit-llvm -o xyz.ll (llvm-ir)
+
+clang xyz.c -Ofast -S -emit-llvm -o xyz.ll (optimized llvm-ir)
+
+#optimization level
+
+(-O, -O1, -O2, O3, -Ofast)
