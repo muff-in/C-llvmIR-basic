@@ -5,7 +5,7 @@
 	.endef
 	.globl	@feat.00
 .set @feat.00, 0
-	.file	"testllvm.c"
+	.file	"main.c"
 	.def	 sprintf;
 	.scl	2;
 	.type	32;
@@ -136,14 +136,47 @@ _vsnprintf:                             # @_vsnprintf
 main:                                   # @main
 .seh_proc main
 # %bb.0:
-	subq	$40, %rsp
-	.seh_stackalloc 40
+	subq	$56, %rsp
+	.seh_stackalloc 56
 	.seh_endprologue
-	movl	$0, 36(%rsp)
-	leaq	"??_C@_0O@NFOCKKMG@Hello?5World?$CB?6?$AA@"(%rip), %rcx
+	movl	$0, 52(%rsp)
+	leaq	"??_C@_0BF@PNKAKABK@Enter?5first?5number?3?5?$AA@"(%rip), %rcx
 	callq	printf
+	leaq	"??_C@_02DPKJAMEF@?$CFd?$AA@"(%rip), %rcx
+	leaq	48(%rsp), %rdx
+	callq	scanf_s
+	leaq	"??_C@_0BG@JDAKAGEJ@Enter?5second?5number?3?5?$AA@"(%rip), %rcx
+	callq	printf
+	leaq	"??_C@_02DPKJAMEF@?$CFd?$AA@"(%rip), %rcx
+	leaq	44(%rsp), %rdx
+	callq	scanf_s
+	movl	48(%rsp), %eax
+	cmpl	44(%rsp), %eax
+	jle	.LBB4_2
+# %bb.1:
+	movl	48(%rsp), %edx
+	leaq	"??_C@_0BA@LHOFAHLF@?$CFd?5is?5greater?4?6?$AA@"(%rip), %rcx
+	callq	printf
+	jmp	.LBB4_6
+.LBB4_2:
+	movl	48(%rsp), %eax
+	cmpl	44(%rsp), %eax
+	jne	.LBB4_4
+# %bb.3:
+	movl	44(%rsp), %r8d
+	movl	48(%rsp), %edx
+	leaq	"??_C@_0BE@FOFCFJDK@?$CFd?5is?5equal?5to?5?$CFd?4?6?$AA@"(%rip), %rcx
+	callq	printf
+	jmp	.LBB4_5
+.LBB4_4:
+	movl	44(%rsp), %edx
+	leaq	"??_C@_0BA@LHOFAHLF@?$CFd?5is?5greater?4?6?$AA@"(%rip), %rcx
+	callq	printf
+.LBB4_5:
+	jmp	.LBB4_6
+.LBB4_6:
 	xorl	%eax, %eax
-	addq	$40, %rsp
+	addq	$56, %rsp
 	retq
 	.seh_endproc
                                         # -- End function
@@ -181,6 +214,44 @@ printf:                                 # @printf
 	movl	%eax, 60(%rsp)
 	movl	60(%rsp), %eax
 	addq	$72, %rsp
+	retq
+	.seh_endproc
+                                        # -- End function
+	.def	 scanf_s;
+	.scl	2;
+	.type	32;
+	.endef
+	.section	.text,"xr",discard,scanf_s
+	.globl	scanf_s                         # -- Begin function scanf_s
+	.p2align	4, 0x90
+scanf_s:                                # @scanf_s
+.seh_proc scanf_s
+# %bb.0:
+	subq	$88, %rsp
+	.seh_stackalloc 88
+	.seh_endprologue
+	movq	%r9, 120(%rsp)
+	movq	%r8, 112(%rsp)
+	movq	%rdx, 104(%rsp)
+	movq	%rcx, 80(%rsp)
+	leaq	104(%rsp), %rax
+	movq	%rax, 64(%rsp)
+	movq	64(%rsp), %rax
+	movq	%rax, 48(%rsp)                  # 8-byte Spill
+	movq	80(%rsp), %rax
+	movq	%rax, 40(%rsp)                  # 8-byte Spill
+	xorl	%ecx, %ecx
+	movl	%ecx, 60(%rsp)                  # 4-byte Spill
+	callq	__acrt_iob_func
+	movq	40(%rsp), %rdx                  # 8-byte Reload
+	movq	48(%rsp), %r9                   # 8-byte Reload
+	movq	%rax, %rcx
+	movl	60(%rsp), %eax                  # 4-byte Reload
+	movl	%eax, %r8d
+	callq	_vfscanf_s_l
+	movl	%eax, 76(%rsp)
+	movl	76(%rsp), %eax
+	addq	$88, %rsp
 	retq
 	.seh_endproc
                                         # -- End function
@@ -255,15 +326,15 @@ _vsnprintf_l:                           # @_vsnprintf_l
 	callq	__stdio_common_vsprintf
 	movl	%eax, 100(%rsp)
 	cmpl	$0, 100(%rsp)
-	jge	.LBB7_2
+	jge	.LBB8_2
 # %bb.1:
 	movl	$4294967295, %eax               # imm = 0xFFFFFFFF
 	movl	%eax, 52(%rsp)                  # 4-byte Spill
-	jmp	.LBB7_3
-.LBB7_2:
+	jmp	.LBB8_3
+.LBB8_2:
 	movl	100(%rsp), %eax
 	movl	%eax, 52(%rsp)                  # 4-byte Spill
-.LBB7_3:
+.LBB8_3:
 	movl	52(%rsp), %eax                  # 4-byte Reload
 	addq	$136, %rsp
 	retq
@@ -320,15 +391,89 @@ _vfprintf_l:                            # @_vfprintf_l
 	retq
 	.seh_endproc
                                         # -- End function
-	.section	.rdata,"dr",discard,"??_C@_0O@NFOCKKMG@Hello?5World?$CB?6?$AA@"
-	.globl	"??_C@_0O@NFOCKKMG@Hello?5World?$CB?6?$AA@" # @"??_C@_0O@NFOCKKMG@Hello?5World?$CB?6?$AA@"
-"??_C@_0O@NFOCKKMG@Hello?5World?$CB?6?$AA@":
-	.asciz	"Hello World!\n"
+	.def	 _vfscanf_s_l;
+	.scl	2;
+	.type	32;
+	.endef
+	.section	.text,"xr",discard,_vfscanf_s_l
+	.globl	_vfscanf_s_l                    # -- Begin function _vfscanf_s_l
+	.p2align	4, 0x90
+_vfscanf_s_l:                           # @_vfscanf_s_l
+.seh_proc _vfscanf_s_l
+# %bb.0:
+	subq	$104, %rsp
+	.seh_stackalloc 104
+	.seh_endprologue
+	movq	%r9, 96(%rsp)
+	movq	%r8, 88(%rsp)
+	movq	%rdx, 80(%rsp)
+	movq	%rcx, 72(%rsp)
+	movq	96(%rsp), %rax
+	movq	%rax, 64(%rsp)                  # 8-byte Spill
+	movq	88(%rsp), %rax
+	movq	%rax, 56(%rsp)                  # 8-byte Spill
+	movq	80(%rsp), %rax
+	movq	%rax, 48(%rsp)                  # 8-byte Spill
+	movq	72(%rsp), %rax
+	movq	%rax, 40(%rsp)                  # 8-byte Spill
+	callq	__local_stdio_scanf_options
+	movq	40(%rsp), %rdx                  # 8-byte Reload
+	movq	48(%rsp), %r8                   # 8-byte Reload
+	movq	56(%rsp), %r9                   # 8-byte Reload
+	movq	%rax, %rcx
+	movq	64(%rsp), %rax                  # 8-byte Reload
+	movq	(%rcx), %rcx
+	orq	$1, %rcx
+	movq	%rax, 32(%rsp)
+	callq	__stdio_common_vfscanf
+	nop
+	addq	$104, %rsp
+	retq
+	.seh_endproc
+                                        # -- End function
+	.def	 __local_stdio_scanf_options;
+	.scl	2;
+	.type	32;
+	.endef
+	.section	.text,"xr",discard,__local_stdio_scanf_options
+	.globl	__local_stdio_scanf_options     # -- Begin function __local_stdio_scanf_options
+	.p2align	4, 0x90
+__local_stdio_scanf_options:            # @__local_stdio_scanf_options
+# %bb.0:
+	leaq	__local_stdio_scanf_options._OptionsStorage(%rip), %rax
+	retq
+                                        # -- End function
+	.section	.rdata,"dr",discard,"??_C@_0BF@PNKAKABK@Enter?5first?5number?3?5?$AA@"
+	.globl	"??_C@_0BF@PNKAKABK@Enter?5first?5number?3?5?$AA@" # @"??_C@_0BF@PNKAKABK@Enter?5first?5number?3?5?$AA@"
+"??_C@_0BF@PNKAKABK@Enter?5first?5number?3?5?$AA@":
+	.asciz	"Enter first number: "
+
+	.section	.rdata,"dr",discard,"??_C@_02DPKJAMEF@?$CFd?$AA@"
+	.globl	"??_C@_02DPKJAMEF@?$CFd?$AA@"   # @"??_C@_02DPKJAMEF@?$CFd?$AA@"
+"??_C@_02DPKJAMEF@?$CFd?$AA@":
+	.asciz	"%d"
+
+	.section	.rdata,"dr",discard,"??_C@_0BG@JDAKAGEJ@Enter?5second?5number?3?5?$AA@"
+	.globl	"??_C@_0BG@JDAKAGEJ@Enter?5second?5number?3?5?$AA@" # @"??_C@_0BG@JDAKAGEJ@Enter?5second?5number?3?5?$AA@"
+"??_C@_0BG@JDAKAGEJ@Enter?5second?5number?3?5?$AA@":
+	.asciz	"Enter second number: "
+
+	.section	.rdata,"dr",discard,"??_C@_0BA@LHOFAHLF@?$CFd?5is?5greater?4?6?$AA@"
+	.globl	"??_C@_0BA@LHOFAHLF@?$CFd?5is?5greater?4?6?$AA@" # @"??_C@_0BA@LHOFAHLF@?$CFd?5is?5greater?4?6?$AA@"
+"??_C@_0BA@LHOFAHLF@?$CFd?5is?5greater?4?6?$AA@":
+	.asciz	"%d is greater.\n"
+
+	.section	.rdata,"dr",discard,"??_C@_0BE@FOFCFJDK@?$CFd?5is?5equal?5to?5?$CFd?4?6?$AA@"
+	.globl	"??_C@_0BE@FOFCFJDK@?$CFd?5is?5equal?5to?5?$CFd?4?6?$AA@" # @"??_C@_0BE@FOFCFJDK@?$CFd?5is?5equal?5to?5?$CFd?4?6?$AA@"
+"??_C@_0BE@FOFCFJDK@?$CFd?5is?5equal?5to?5?$CFd?4?6?$AA@":
+	.asciz	"%d is equal to %d.\n"
 
 	.lcomm	__local_stdio_printf_options._OptionsStorage,8,8 # @__local_stdio_printf_options._OptionsStorage
+	.lcomm	__local_stdio_scanf_options._OptionsStorage,8,8 # @__local_stdio_scanf_options._OptionsStorage
 	.addrsig
 	.addrsig_sym _vsnprintf
 	.addrsig_sym printf
+	.addrsig_sym scanf_s
 	.addrsig_sym _vsprintf_l
 	.addrsig_sym _vsnprintf_l
 	.addrsig_sym __stdio_common_vsprintf
@@ -336,4 +481,8 @@ _vfprintf_l:                            # @_vfprintf_l
 	.addrsig_sym _vfprintf_l
 	.addrsig_sym __acrt_iob_func
 	.addrsig_sym __stdio_common_vfprintf
+	.addrsig_sym _vfscanf_s_l
+	.addrsig_sym __stdio_common_vfscanf
+	.addrsig_sym __local_stdio_scanf_options
 	.addrsig_sym __local_stdio_printf_options._OptionsStorage
+	.addrsig_sym __local_stdio_scanf_options._OptionsStorage

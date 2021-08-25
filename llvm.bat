@@ -1,5 +1,5 @@
-set projectName=testllvm
-
+set projectName=main
+ 
 clang %projectName%.c -S   
 clang %projectName%.c -Ofast -S -emit-llvm -o %projectName%.ll  
 
